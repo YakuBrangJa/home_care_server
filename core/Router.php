@@ -51,6 +51,15 @@ class Router
         $uri = strtok($_SERVER['REQUEST_URI'], '?');
         $method = $_SERVER['REQUEST_METHOD'];
 
+        if (!isset(self::$routes[$method])) {
+            http_response_code(405); // Method Not Allowed
+            echo json_encode([
+                'status' => false,
+                'message' => 'Method not allowed'
+            ]);
+            return;
+        }
+
         foreach (self::$routes[$method] as $routePattern => $routeData) {
             if (preg_match("#^" . $routePattern . "$#", $uri, $matches)) {
                 array_shift($matches); // Remove full match
@@ -64,6 +73,32 @@ class Router
             }
         }
 
-        throw new \Exception("No route found for URI: $uri");
+        // If no route is matched, return 404 response
+        http_response_code(404);
+        echo json_encode([
+            'status' => false,
+            'message' => 'Route not found'
+        ]);
     }
+
+    // public static function dispatch()
+    // {
+    //     $uri = strtok($_SERVER['REQUEST_URI'], '?');
+    //     $method = $_SERVER['REQUEST_METHOD'];
+
+    //     foreach (self::$routes[$method] as $routePattern => $routeData) {
+    //         if (preg_match("#^" . $routePattern . "$#", $uri, $matches)) {
+    //             array_shift($matches); // Remove full match
+
+    //             $controller = new $routeData['controller']();
+    //             $action = $routeData['action'];
+
+    //             // Pass extracted parameters to controller method
+    //             call_user_func_array([$controller, $action], $matches);
+    //             return;
+    //         }
+    //     }
+
+    //     throw new \Exception("No route found for URI: $uri");
+    // }
 }

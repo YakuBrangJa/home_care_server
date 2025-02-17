@@ -47,4 +47,8 @@ class HomeController extends Controller
     echo json_encode($data);
   }
   
+  function testemail() {
+    $data = Home::testEmail();
+    echo json_encode($data);
+  }
 }

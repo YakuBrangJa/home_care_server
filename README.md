@@ -47,7 +47,8 @@ DB_PASSWORD=your_password
 ### 4. Start the PHP Development Server
 Run the built-in PHP server:
 ```sh
-php -S localhost:9000 -t public/
+# php -S localhost:9000 -t public/
+php -S localhost:9000
 ```
 Access the API at `http://localhost:9000`
 
